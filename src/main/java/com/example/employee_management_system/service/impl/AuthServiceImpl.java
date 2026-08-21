@@ -4,6 +4,8 @@ import com.example.employee_management_system.dto.AuthResponse;
 import com.example.employee_management_system.dto.LoginRequest;
 import com.example.employee_management_system.dto.RegisterRequest;
 import com.example.employee_management_system.entity.User;
+import com.example.employee_management_system.exception.DuplicateResourceException;
+import com.example.employee_management_system.exception.ResourceNotFoundException;
 import com.example.employee_management_system.repository.UserRepository;
 import com.example.employee_management_system.security.JwtUtil;
 import com.example.employee_management_system.security.UserDetailsServiceImpl;
@@ -28,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already taken");
+            throw new DuplicateResourceException("Username already taken");
         }
 
         User user = User.builder()
@@ -58,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtUtil.generateToken(userDetails);
 
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         return AuthResponse.builder()
                 .token(token)

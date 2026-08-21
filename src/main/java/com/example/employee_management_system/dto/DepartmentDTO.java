@@ -1,5 +1,6 @@
 package com.example.employee_management_system.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Data
@@ -8,6 +9,8 @@ import lombok.*;
 @Builder
 public class DepartmentDTO {
     private Long id;
+
+    @NotBlank(message = "Department name is required")
     private String name;
     private String description;
 }

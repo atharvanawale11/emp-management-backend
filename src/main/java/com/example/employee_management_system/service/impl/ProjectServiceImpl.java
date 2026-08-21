@@ -3,6 +3,7 @@ package com.example.employee_management_system.service.impl;
 import com.example.employee_management_system.dto.ProjectDTO;
 import com.example.employee_management_system.entity.Employee;
 import com.example.employee_management_system.entity.Project;
+import com.example.employee_management_system.exception.ResourceNotFoundException;
 import com.example.employee_management_system.repository.EmployeeRepository;
 import com.example.employee_management_system.repository.ProjectRepository;
 import com.example.employee_management_system.service.ProjectService;
@@ -22,7 +23,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectDTO createProject(ProjectDTO dto) {
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
-                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + dto.getEmployeeId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + dto.getEmployeeId()));
 
         Project project = Project.builder()
                 .name(dto.getName())
@@ -38,7 +39,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectDTO getProjectById(Long id) {
         Project project = projectRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Project not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + id));
         return mapToDTO(project);
     }
 
@@ -61,10 +62,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectDTO updateProject(Long id, ProjectDTO dto) {
         Project project = projectRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Project not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + id));
 
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
-                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + dto.getEmployeeId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + dto.getEmployeeId()));
 
         project.setName(dto.getName());
         project.setLocation(dto.getLocation());
@@ -78,7 +79,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void deleteProject(Long id) {
         Project project = projectRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Project not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + id));
         projectRepository.delete(project);
     }
 

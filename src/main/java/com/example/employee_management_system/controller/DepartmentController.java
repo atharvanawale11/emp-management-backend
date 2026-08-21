@@ -2,6 +2,7 @@ package com.example.employee_management_system.controller;
 
 import com.example.employee_management_system.dto.DepartmentDTO;
 import com.example.employee_management_system.service.DepartmentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class DepartmentController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<DepartmentDTO> createDepartment(@RequestBody DepartmentDTO dto) {
+    public ResponseEntity<DepartmentDTO> createDepartment(@Valid @RequestBody DepartmentDTO dto) {
         return new ResponseEntity<>(departmentService.createDepartment(dto), HttpStatus.CREATED);
     }
 

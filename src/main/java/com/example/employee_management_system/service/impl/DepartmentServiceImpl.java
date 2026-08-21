@@ -2,6 +2,8 @@ package com.example.employee_management_system.service.impl;
 
 import com.example.employee_management_system.dto.DepartmentDTO;
 import com.example.employee_management_system.entity.Department;
+import com.example.employee_management_system.exception.DuplicateResourceException;
+import com.example.employee_management_system.exception.ResourceNotFoundException;
 import com.example.employee_management_system.repository.DepartmentRepository;
 import com.example.employee_management_system.service.DepartmentService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentDTO createDepartment(DepartmentDTO dto) {
         if (departmentRepository.existsByName(dto.getName())) {
-            throw new RuntimeException("Department with this name already exists");
+            throw new DuplicateResourceException("Department with this name already exists");
         }
         Department department = Department.builder()
                 .name(dto.getName())
@@ -32,7 +34,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentDTO getDepartmentById(Long id) {
         Department department = departmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Department not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + id));
         return mapToDTO(department);
     }
 
@@ -47,7 +49,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentDTO updateDepartment(Long id, DepartmentDTO dto) {
         Department department = departmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Department not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + id));
         department.setName(dto.getName());
         department.setDescription(dto.getDescription());
         Department updated = departmentRepository.save(department);
@@ -57,7 +59,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public void deleteDepartment(Long id) {
         Department department = departmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Department not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + id));
         departmentRepository.delete(department);
     }
 
